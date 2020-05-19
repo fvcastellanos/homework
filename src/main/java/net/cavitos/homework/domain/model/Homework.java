@@ -6,21 +6,26 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.Instant;
 
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class Assigment {
+public class Homework {
 
     @Id
     private long id;
+
+    @NotNull
+    private long assigmentId;
 
     @NotBlank
     @Size(max = 150)
@@ -29,12 +34,6 @@ public class Assigment {
     @Size(max = 300)
     private String description;
 
-    @Email
-    @NotBlank
-    @Size(max = 250)
-    private String email;
-
-    @Email
-    @Size(max = 250)
-    private String copyEmail;
+    @NotNull
+    private Instant due;
 }
