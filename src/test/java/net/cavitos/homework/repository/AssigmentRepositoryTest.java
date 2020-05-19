@@ -17,7 +17,6 @@ public class AssigmentRepositoryTest extends RepositoryTestBase {
     public void testGetAssigments() {
 
         var assigment = buildAssigment("test assigment");
-
         var storedAssigment = saveAssigment(assigment);
 
         var assigments = assigmentRepository.findAll();
@@ -30,13 +29,25 @@ public class AssigmentRepositoryTest extends RepositoryTestBase {
     public void testSaveAssigment() {
 
         var assigmentName = "test assigment";
-
         var assigment = assigmentRepository.save(buildAssigment(assigmentName));
 
         var storedAssigment = getAssigment(assigmentName);
 
         assertThat(assigment)
                 .isEqualTo(storedAssigment);
+    }
+
+    @Test
+    public void testFindByName() {
+
+        var assigmentName = "test assigment";
+        var assigment = saveAssigment(buildAssigment(assigmentName));
+
+        var storedAssigment = assigmentRepository.findByName(assigmentName);
+
+        assertThat(storedAssigment)
+                .isPresent().get()
+                .isEqualTo(assigment);
     }
 
     // ------------------------------------------------------------------------------------------------

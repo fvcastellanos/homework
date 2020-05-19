@@ -19,6 +19,7 @@
 		<hibernate-validator.version>6.0.2.Final</hibernate-validator.version>
 		<java.version>11</java.version>
 		<javax-validation.version>2.0.0.Final</javax-validation.version>
+		<vavr.version>0.10.0</vavr.version>
 	</properties>
 
 	<dependencies>
@@ -71,6 +72,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>io.vavr</groupId>
+			<artifactId>vavr</artifactId>
+			<version>${vavr.version}</version>
 		</dependency>
 
 		<dependency>
