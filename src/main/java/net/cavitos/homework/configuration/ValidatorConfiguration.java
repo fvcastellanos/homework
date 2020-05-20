@@ -3,7 +3,7 @@ package net.cavitos.homework.configuration;
 import net.cavitos.homework.domain.validator.AssigmentValidator;
 import net.cavitos.homework.domain.validator.HomeworkValidator;
 import net.cavitos.homework.repository.AssigmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import net.cavitos.homework.repository.HomeworkRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -21,19 +21,23 @@ public class ValidatorConfiguration implements RepositoryRestConfigurer {
     }
 
     @Bean
-    public HomeworkValidator homeworkValidator() {
+    public HomeworkValidator homeworkValidator(HomeworkRepository homeworkRepository) {
 
-        return new HomeworkValidator();
+        return new HomeworkValidator(homeworkRepository);
     }
 
     @Configuration
     public static class ValidatorConfigurer implements RepositoryRestConfigurer {
 
-        @Autowired
         private AssigmentValidator assigmentValidator;
-
-        @Autowired
         private HomeworkValidator homeworkValidator;
+
+        public ValidatorConfigurer(AssigmentValidator assigmentValidator,
+                                   HomeworkValidator homeworkValidator) {
+
+            this.assigmentValidator = assigmentValidator;
+            this.homeworkValidator = homeworkValidator;
+        }
 
         @Override
         public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {

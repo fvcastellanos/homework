@@ -9,7 +9,7 @@ import org.springframework.validation.Validator;
 
 import javax.validation.Validation;
 
-public class AssigmentValidator implements Validator {
+public class AssigmentValidator extends BaseValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(AssigmentValidator.class);
 
@@ -29,18 +29,7 @@ public class AssigmentValidator implements Validator {
     @Override
     public void validate(Object object, Errors errors) {
 
-        var validatorFactory = Validation.buildDefaultValidatorFactory();
-        var validator = validatorFactory.getValidator();
-
-        var violations = validator.validate(object);
-
-        violations.forEach(violation -> {
-
-            logger.info("validation error: {} {}", violation.getPropertyPath(), violation.getMessage());
-
-            errors.rejectValue(violation.getPropertyPath().toString(), "", violation.getMessage());
-        });
-
+        beanValidation(object, errors);
         validateExistingAssigmentName(object, errors);
     }
 
@@ -49,10 +38,12 @@ public class AssigmentValidator implements Validator {
         if (!errors.hasErrors()) {
 
             var assigment = (Assigment) object;
-            var assigmentHolder = assigmentRepository.findByName(assigment.getName());
+            var name = assigment.getName();
+            var assigmentHolder = assigmentRepository.findByName(name);
 
             if (assigmentHolder.isPresent()) {
 
+                logger.warn("assigment name: {} already exists", name);
                 errors.rejectValue("name", "", "name already exists");
             }
         }
