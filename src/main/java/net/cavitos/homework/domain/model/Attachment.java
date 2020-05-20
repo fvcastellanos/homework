@@ -23,8 +23,6 @@ public class Attachment {
     @NotNull
     private long homeworkId;
 
-    private Assigment assigment;
-
     @NotBlank
     private String imagePath;
 }

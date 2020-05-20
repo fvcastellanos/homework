@@ -6,7 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.Optional;
 
-@RepositoryRestResource(path = "homeworks")
+@RepositoryRestResource(path = "tasks")
 public interface HomeworkRepository extends CrudRepository<Homework, Long> {
 
     Optional<Homework> findByName(String name);

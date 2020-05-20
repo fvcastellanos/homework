@@ -1,6 +1,7 @@
 package net.cavitos.homework.domain.validator;
 
 import net.cavitos.homework.domain.model.Homework;
+import net.cavitos.homework.repository.AssigmentRepository;
 import net.cavitos.homework.repository.HomeworkRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +11,13 @@ public class HomeworkValidator extends BaseValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeworkValidator.class);
 
+    private AssigmentRepository assigmentRepository;
     private HomeworkRepository homeworkRepository;
 
-    public HomeworkValidator(HomeworkRepository homeworkRepository) {
+    public HomeworkValidator(HomeworkRepository homeworkRepository,
+                             AssigmentRepository assigmentRepository) {
 
+        this.assigmentRepository = assigmentRepository;
         this.homeworkRepository = homeworkRepository;
     }
 
@@ -26,10 +30,11 @@ public class HomeworkValidator extends BaseValidator {
     public void validate(Object object, Errors errors) {
 
         beanValidation(object, errors);
-        validateExistingAssigmentName(object, errors);
+        validateExistingName(object, errors);
+        validateNonExistingAssigmentId(object, errors);
     }
 
-    private void validateExistingAssigmentName(Object object, Errors errors) {
+    private void validateExistingName(Object object, Errors errors) {
 
         if (!errors.hasErrors()) {
 
@@ -40,7 +45,26 @@ public class HomeworkValidator extends BaseValidator {
             if (homeworkHolder.isPresent()) {
 
                 logger.warn("homework name: {} already exists", name);
-                errors.rejectValue("name", "", "name already exists");
+                errors.rejectValue("assigmentId", "", "name already exists");
+            }
+        }
+    }
+
+    // --------------------------------------------------------------------------------
+
+    private void validateNonExistingAssigmentId(Object object, Errors errors) {
+
+        if (!errors.hasErrors()) {
+
+            var homework = (Homework) object;
+            var assigmentId = homework.getAssigmentId();
+
+            var assigmentHolder = assigmentRepository.findById(assigmentId);
+
+            if (assigmentHolder.isEmpty()) {
+
+                logger.warn("assigment id: {} doesn't exists", assigmentId);
+                errors.rejectValue("assigmentId", "", "doesn't exists");
             }
         }
     }

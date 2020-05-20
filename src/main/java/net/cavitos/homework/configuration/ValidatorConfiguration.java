@@ -1,6 +1,7 @@
 package net.cavitos.homework.configuration;
 
 import net.cavitos.homework.domain.validator.AssigmentValidator;
+import net.cavitos.homework.domain.validator.AttachmentValidator;
 import net.cavitos.homework.domain.validator.HomeworkValidator;
 import net.cavitos.homework.repository.AssigmentRepository;
 import net.cavitos.homework.repository.HomeworkRepository;
@@ -21,9 +22,16 @@ public class ValidatorConfiguration implements RepositoryRestConfigurer {
     }
 
     @Bean
-    public HomeworkValidator homeworkValidator(HomeworkRepository homeworkRepository) {
+    public HomeworkValidator homeworkValidator(AssigmentRepository assigmentRepository,
+                                               HomeworkRepository homeworkRepository) {
 
-        return new HomeworkValidator(homeworkRepository);
+        return new HomeworkValidator(homeworkRepository, assigmentRepository);
+    }
+
+    @Bean
+    public AttachmentValidator attachmentValidator(HomeworkRepository homeworkRepository) {
+
+        return new AttachmentValidator(homeworkRepository);
     }
 
     @Configuration
@@ -31,12 +39,15 @@ public class ValidatorConfiguration implements RepositoryRestConfigurer {
 
         private AssigmentValidator assigmentValidator;
         private HomeworkValidator homeworkValidator;
+        private AttachmentValidator attachmentValidator;
 
         public ValidatorConfigurer(AssigmentValidator assigmentValidator,
-                                   HomeworkValidator homeworkValidator) {
+                                   HomeworkValidator homeworkValidator,
+                                   AttachmentValidator attachmentValidator) {
 
             this.assigmentValidator = assigmentValidator;
             this.homeworkValidator = homeworkValidator;
+            this.attachmentValidator = attachmentValidator;
         }
 
         @Override
@@ -44,6 +55,7 @@ public class ValidatorConfiguration implements RepositoryRestConfigurer {
 
             validatingListener.addValidator("beforeCreate", assigmentValidator);
             validatingListener.addValidator("beforeCreate", homeworkValidator);
+            validatingListener.addValidator("beforeCreate", attachmentValidator);
         }
     }
 }

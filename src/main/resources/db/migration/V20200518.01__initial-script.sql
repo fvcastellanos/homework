@@ -1,6 +1,6 @@
 create schema if not exists homework;
 
-create table assigment
+create table if not exists assigment
 (
 	id int auto_increment,
 	name varchar(150) not null,
