@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {AssigmentService} from "./assigment.service";
+import {Response} from "./model/response";
 
 @Component({
   selector: 'app-assigment',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AssigmentComponent implements OnInit {
 
-  constructor() { }
+  public apiResponse: Response;
+
+  constructor(private assigmentService: AssigmentService) { }
 
   ngOnInit(): void {
+
+    this.getAssigments();
+  }
+
+  getAssigments(): void {
+
+    this.assigmentService.getAll()
+      .subscribe(response =>{
+
+        console.log(response);
+        this.apiResponse = response;
+
+      })
   }
 
 }
