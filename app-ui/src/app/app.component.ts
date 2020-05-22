@@ -13,4 +13,19 @@ export class AppComponent {
     new MenuItem("li-assignments", "Assignments", "nav-item", "assignments"),
     new MenuItem("li-homework", "Homework", "nav-item", "homework")
   ];
+
+  setMenuOptionActive(id: string) {
+
+    this.menuOptions.forEach(item => {
+
+      if (id == item.id) {
+        item.cssClasses = 'nav-item active';
+      } else {
+        item.cssClasses = 'nav-item';
+      }
+
+    });
+
+
+  }
 }
