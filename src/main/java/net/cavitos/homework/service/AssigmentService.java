@@ -2,7 +2,7 @@ package net.cavitos.homework.service;
 
 import io.vavr.control.Either;
 import io.vavr.control.Try;
-import net.cavitos.homework.domain.view.AssigmentView;
+import net.cavitos.homework.domain.view.AssignmentView;
 import net.cavitos.homework.mapper.AssigmentMapper;
 import net.cavitos.homework.repository.AssigmentRepository;
 import org.slf4j.Logger;
@@ -26,34 +26,34 @@ public class AssigmentService {
         this.assigmentRepository = assigmentRepository;
     }
 
-    public Either<String, AssigmentView> saveAssigment(AssigmentView assigmentView) {
+    public Either<String, AssignmentView> saveAssigment(AssignmentView assignmentView) {
 
         try {
 
-            logger.info("creating assigment with name: {}", assigmentView.getName());
-            var assigmentHolder = assigmentRepository.findByName(assigmentView.getName());
+            logger.info("creating assigment with name: {}", assignmentView.getName());
+            var assigmentHolder = assigmentRepository.findByName(assignmentView.getName());
 
             if (assigmentHolder.isPresent()) {
 
-                var response = String.format("assigment with name: %s already exists", assigmentView.getName());
+                var response = String.format("assigment with name: %s already exists", assignmentView.getName());
 
                 logger.info(response);
                 return Either.left(response);
             }
 
-            var assigment = mapToAssigment(assigmentView);
+            var assigment = mapToAssigment(assignmentView);
             var stored = assigmentRepository.save(assigment);
 
-            logger.info("assigment with name: {}", assigmentView.getName());
+            logger.info("assigment with name: {}", assignmentView.getName());
             return Either.right(mapToAssigmentView(stored));
 
         } catch (Exception ex) {
             logger.error("can't add new assigment: ", ex);
-            return Either.left("can't add new assigment with name: " + assigmentView.getName());
+            return Either.left("can't add new assigment with name: " + assignmentView.getName());
         }
     }
 
-    public Either<String, List<AssigmentView>> getAssigmentList() {
+    public Either<String, List<AssignmentView>> getAssigmentList() {
 
         return Try.of(() -> {
             logger.info("getting assigment list");
@@ -67,7 +67,7 @@ public class AssigmentService {
                 .mapLeft(ex -> "can't retrieve assigment list");
     }
 
-    public Either<String, AssigmentView> getAssigment(long id) {
+    public Either<String, AssignmentView> getAssigment(long id) {
 
         try {
 

@@ -1,6 +1,6 @@
 import {Href} from "../../model/href";
 
-export class Assigment {
+export class Assignment {
 
   public id: number;
   public name: string;

@@ -3,14 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AssigmentComponent } from './assigment/assigment.component';
+import { AssignmentComponent } from './assignment/assignment.component';
 import { HomeComponent } from './home/home.component';
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
-    AssigmentComponent,
+    AssignmentComponent,
     HomeComponent,
   ],
   imports: [

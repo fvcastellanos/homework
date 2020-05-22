@@ -1,29 +1,29 @@
 package net.cavitos.homework.mapper;
 
-import net.cavitos.homework.domain.model.Assigment;
-import net.cavitos.homework.domain.view.AssigmentView;
+import net.cavitos.homework.domain.model.Assignment;
+import net.cavitos.homework.domain.view.AssignmentView;
 
 public class AssigmentMapper {
 
-    public static AssigmentView mapToAssigmentView(Assigment assigment) {
+    public static AssignmentView mapToAssigmentView(Assignment assignment) {
 
-        return AssigmentView.builder()
-                .id(assigment.getId())
-                .name(assigment.getName())
-                .description(assigment.getDescription())
-                .email(assigment.getEmail())
-                .copyEmail(assigment.getCopyEmail())
+        return AssignmentView.builder()
+                .id(assignment.getId())
+                .name(assignment.getName())
+                .description(assignment.getDescription())
+                .email(assignment.getEmail())
+                .copyEmail(assignment.getCopyEmail())
                 .build();
     }
 
-    public static Assigment mapToAssigment(AssigmentView assigmentView) {
+    public static Assignment mapToAssigment(AssignmentView assignmentView) {
 
-        return Assigment.builder()
-                .id(assigmentView.getId())
-                .name(assigmentView.getName())
-                .description(assigmentView.getDescription())
-                .email(assigmentView.getEmail())
-                .copyEmail(assigmentView.getCopyEmail())
+        return Assignment.builder()
+                .id(assignmentView.getId())
+                .name(assignmentView.getName())
+                .description(assignmentView.getDescription())
+                .email(assignmentView.getEmail())
+                .copyEmail(assignmentView.getCopyEmail())
                 .build();
     }
 }

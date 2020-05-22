@@ -1,6 +1,6 @@
 create schema if not exists homework;
 
-create table if not exists assigment
+create table if not exists assignment
 (
 	id int auto_increment,
 	name varchar(150) not null,
@@ -11,5 +11,5 @@ create table if not exists assigment
 		primary key (id)
 );
 
-create unique index assigment_name_uindex
-	on assigment (name);
+create unique index assignment_name_uindex
+	on assignment (name);

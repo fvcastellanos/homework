@@ -1,6 +1,6 @@
 package net.cavitos.homework.repository;
 
-import net.cavitos.homework.domain.model.Assigment;
+import net.cavitos.homework.domain.model.Assignment;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AssigmentRepositoryTest extends RepositoryTestBase {
+public class AssignmentRepositoryTest extends RepositoryTestBase {
 
     @Autowired
     private AssigmentRepository assigmentRepository;
@@ -52,10 +52,10 @@ public class AssigmentRepositoryTest extends RepositoryTestBase {
 
     // ------------------------------------------------------------------------------------------------
 
-    private Assigment getAssigment(String name) {
+    private Assignment getAssigment(String name) {
 
         return jdbcOperations.queryForObject("select * from assigment where name = ?", new Object[] { name }, ((rs, i) ->
-            Assigment.builder()
+            Assignment.builder()
                     .id(rs.getLong("id"))
                     .name(rs.getString("name"))
                     .description(rs.getString("description"))
@@ -65,22 +65,22 @@ public class AssigmentRepositoryTest extends RepositoryTestBase {
         ));
     }
 
-    private List<Assigment> getAssigments() {
+    private List<Assignment> getAssigments() {
 
-        return jdbcOperations.queryForList("select * from assigment", Assigment.class);
+        return jdbcOperations.queryForList("select * from assigment", Assignment.class);
     }
 
-    private Assigment saveAssigment(Assigment assigment) {
+    private Assignment saveAssigment(Assignment assignment) {
 
         jdbcOperations.update("insert into assigment (name, description, email, copy_email) values (?, ?, ?, ?)",
-                assigment.getName(), assigment.getDescription(), assigment.getEmail(), assigment.getCopyEmail());
+                assignment.getName(), assignment.getDescription(), assignment.getEmail(), assignment.getCopyEmail());
 
-        return getAssigment(assigment.getName());
+        return getAssigment(assignment.getName());
     }
 
-    private static Assigment buildAssigment(String name) {
+    private static Assignment buildAssigment(String name) {
 
-        return Assigment.builder()
+        return Assignment.builder()
                 .name(name)
                 .description("test assigment")
                 .email("email@mail.com")

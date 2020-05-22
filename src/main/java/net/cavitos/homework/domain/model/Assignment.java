@@ -1,37 +1,40 @@
-package net.cavitos.homework.domain.view;
+package net.cavitos.homework.domain.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Getter
-@Setter
 @Builder
 @ToString
 @EqualsAndHashCode
-public class AssigmentView {
+@AllArgsConstructor
+public class Assignment {
 
+    @Id
     private long id;
 
-    @Max(150)
     @NotBlank
+    @Size(max = 150)
     private String name;
 
-    @Max(300)
+    @Size(max = 300)
     private String description;
 
     @Email
-    @Max(250)
     @NotBlank
+    @Size(max = 250)
     private String email;
 
     @Email
-    @Max(250)
+    @Size(max = 250)
     private String copyEmail;
 }

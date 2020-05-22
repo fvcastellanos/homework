@@ -1,13 +1,13 @@
 package net.cavitos.homework.fixture;
 
-import net.cavitos.homework.domain.model.Assigment;
-import net.cavitos.homework.domain.view.AssigmentView;
+import net.cavitos.homework.domain.model.Assignment;
+import net.cavitos.homework.domain.view.AssignmentView;
 
 public class DomainFixture {
 
-    public static Assigment buildAssigment(String name) {
+    public static Assignment buildAssigment(String name) {
 
-        return Assigment.builder()
+        return Assignment.builder()
                 .name(name)
                 .description("description")
                 .email("email@mail.com")
@@ -15,9 +15,9 @@ public class DomainFixture {
                 .build();
     }
 
-    public static AssigmentView buildAssigmentView(String name) {
+    public static AssignmentView buildAssigmentView(String name) {
 
-        return AssigmentView.builder()
+        return AssignmentView.builder()
                 .name(name)
                 .description("description")
                 .email("email@mail.com")

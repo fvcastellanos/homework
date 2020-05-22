@@ -1,13 +1,10 @@
 package net.cavitos.homework.domain.validator;
 
-import net.cavitos.homework.domain.model.Assigment;
+import net.cavitos.homework.domain.model.Assignment;
 import net.cavitos.homework.repository.AssigmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
-import javax.validation.Validation;
 
 public class AssigmentValidator extends BaseValidator {
 
@@ -23,7 +20,7 @@ public class AssigmentValidator extends BaseValidator {
     @Override
     public boolean supports(Class<?> aClass) {
 
-        return Assigment.class.equals(aClass);
+        return Assignment.class.equals(aClass);
     }
 
     @Override
@@ -37,7 +34,7 @@ public class AssigmentValidator extends BaseValidator {
 
         if (!errors.hasErrors()) {
 
-            var assigment = (Assigment) object;
+            var assigment = (Assignment) object;
             var name = assigment.getName();
             var assigmentHolder = assigmentRepository.findByName(name);
 
