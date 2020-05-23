@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AssignmentService} from "./assignment.service";
-import {Response} from "./model/response";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Assignment} from "./model/assignment";
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-assignment',
@@ -11,17 +11,17 @@ import {Assignment} from "./model/assignment";
 })
 export class AssignmentComponent implements OnInit {
 
-  public apiResponse: Response;
-  public form: FormGroup;
-  public hideAddModal: boolean;
-  public assignment: Assignment;
+  assignmentList: Assignment[];
+  form: FormGroup;
+  formSubmitted: boolean;
+  deleteUrl: string;
+  deleteName: string;
 
   constructor(private formBuilder: FormBuilder,
               private assigmentService: AssignmentService) { }
 
   ngOnInit(): void {
 
-    this.hideAddModal = true;
     this.getAssignments();
     this.buildAddForm();
   }
@@ -31,56 +31,90 @@ export class AssignmentComponent implements OnInit {
     this.assigmentService.getAll()
       .subscribe(response => {
 
-        console.log(response);
-        this.apiResponse = response;
-
-      })
+        console.log(`got response: ${response}`);
+        this.assignmentList = response._embedded.assignments
+      });
   }
 
-  displayAddModal(display: boolean) : void {
-
-    console.log(`display: ${display}`);
-    this.hideAddModal = !display;
+  displayAddForm(): void {
     this.buildAddForm();
-
   }
 
   buildAddForm(): void {
 
-    this.assignment = new Assignment();
-
-/*
-    this.form = this.formBuilder.group({
-      name: '',
-      description: '',
-      email: '',
-      copyEmail: ''
-    })
-*/
+    this.formSubmitted = false;
     this.form = this.formBuilder.group({
 
-      name: new FormControl(this.assignment.name, [
+      name: new FormControl('', [
         Validators.required,
         Validators.maxLength(150)
       ]),
-      description: new FormControl(this.assignment.description, [
+      description: new FormControl('', [
         Validators.maxLength(300)
       ]),
-      email: new FormControl(this.assignment.email, [
+      email: new FormControl('', [
         Validators.required,
         Validators.maxLength(250),
         Validators.email
       ]),
-      copyEmail: new FormControl(this.assignment.copyEmail, [
+      copyEmail: new FormControl('', [
         Validators.maxLength(250),
         Validators.email
       ])
     });
+
+    console.log(`form created: ${this.form}`);
   }
 
-  public addAssignment(): void {
-    const form = this.form.value;
+  addAssignment(): void {
+    this.formSubmitted = true;
 
-    console.log(this.assignment.name);
+    console.log('save button pressed');
+
+    if (this.form.valid) {
+
+      console.log('form is valid');
+
+      const form = this.form.value;
+      let value = new Assignment();
+
+      value.name = form.name;
+      value.description = form.description;
+      value.email = form.email;
+      value.copyEmail = form.copyEmail;
+
+      this.assigmentService.add(value)
+        .subscribe(response => {
+
+          console.log(response);
+        }, error => {
+
+          console.log(error);
+        });
+
+      this.closeAddModal();
+      window.location.reload();
+    }
+  }
+
+  confirmDelete(name: string, url: string) {
+
+    console.log(`name: ${name}, url: ${url}`);
+    this.deleteName = name;
+    this.deleteUrl = url;
+  }
+
+  deleteAssignment(url: string) : void {
+
+    this.assigmentService.delete(url);
+    window.location.reload();
+  }
+
+  get f() {
+    return this.form.controls;
+  }
+
+  private closeAddModal() {
+    $("#modalClose").click();
   }
 }

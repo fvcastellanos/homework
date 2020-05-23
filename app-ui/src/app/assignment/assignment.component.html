@@ -6,7 +6,7 @@
 
       <h1>Assignments</h1>
 
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal" (click)="displayAddModal(true)">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
         Add Assignment
       </button>
 
@@ -20,13 +20,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let assignment of apiResponse._embedded.assignments">
+          <tr *ngFor="let assignment of assignmentList">
             <td>{{assignment.name}}</td>
             <td>{{assignment.email}}</td>
             <td>{{assignment.copyEmail}}</td>
             <td>
               <a class="btn btn-primary"><i class="fa fa-pencil" ></i></a>&nbsp;
-              <a class="btn btn-danger"><i class="fa fa-trash" ></i></a>
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"
+                (click)="confirmDelete(assignment.name, assignment._links['self'].href)">
+                <i class="fa fa-trash" ></i>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -38,7 +41,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" [attr.aria-hidden]="hideAddModal">
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -48,33 +51,76 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="form" >
+        <form [formGroup]="form" (ngSubmit)="addAssignment()">
 
           <fieldset>
-            <div class="form-group">
+            <div class="form-group has-danger">
               <label for="name">Name</label>
-              <input type="text" class="form-control" id="name" placeholder="Assignment name" formControlName="name">
+              <input type="text" class="form-control" id="name" placeholder="Assignment name" formControlName="name"
+                     [ngClass]="{ 'is-invalid': formSubmitted && f.name.errors }">
+              <div *ngIf="formSubmitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">Name is required</div>
+                <div *ngIf="f.name.errors.maxlength">Maximum length is 150 chars</div>
+              </div>
             </div>
-            <div class="form-group">
+            <div class="form-group has-danger">
               <label for="description">Description</label>
-              <textarea class="form-control" id="description" rows="3" formControlName="description"></textarea>
+              <textarea class="form-control" id="description" rows="3" formControlName="description"
+                        [ngClass]="{ 'is-invalid': formSubmitted && f.description.errors }">
+              </textarea>
+              <div *ngIf="formSubmitted && f.description.errors" class="invalid-feedback">
+                <div *ngIf="f.description.errors.maxlength">Maximum length is 300 chars</div>
+              </div>
             </div>
-            <div class="form-group">
+            <div class="form-group has-danger">
               <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Assignment email" formControlName="email">
+              <input type="email" class="form-control" id="email" placeholder="Assignment email" formControlName="email"
+                     [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }">
+              <div *ngIf="formSubmitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Invalid Email format</div>
+                <div *ngIf="f.email.errors.maxlength">Maximum length is 250 chars</div>
+              </div>
             </div>
-            <div class="form-group">
+            <div class="form-group has-danger">
               <label for="copy-email">Copy Email</label>
-              <input type="email" class="form-control" id="copy-email" placeholder="Copy Email" formControlName="copyEmail">
+              <input type="email" class="form-control" id="copy-email" placeholder="Copy Email" formControlName="copyEmail"
+                     [ngClass]="{ 'is-invalid': formSubmitted && f.copyEmail.errors }">
+              <div *ngIf="formSubmitted && f.copyEmail.errors" class="invalid-feedback">
+                <div *ngIf="f.copyEmail.errors.email">Invalid Email format</div>
+                <div *ngIf="f.copyEmail.errors.maxlength">Maximum length is 250 chars</div>
+              </div>
             </div>
 
           </fieldset>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+
         </form>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="displayAddModal(false)">Close</button>
-        <button type="submit" class="btn btn-primary" (click)="addAssignment()">Save changes</button>
+        <button type="button" id="modalClose" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Assignment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to delete the assignment: <strong>{{deleteName}}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="deleteAssignment(this.deleteUrl)">Delete</button>
       </div>
     </div>
   </div>
