@@ -17,8 +17,13 @@ export class AssignmentService {
 
   public getAll(): Observable<Response> {
 
-    console.log("assignment uri: ", this.AssigmentUri);
     return this.httpClient.get<Response>(this.AssigmentUri);
+  }
+
+  public getById(id: string): Observable<Assignment> {
+
+    let url = `${this.AssigmentUri}/${id}`;
+    return this.httpClient.get<Assignment>(url);
   }
 
   public add(assignment: Assignment): Observable<Assignment> {
@@ -26,9 +31,11 @@ export class AssignmentService {
     return this.httpClient.post<Assignment>(this.AssigmentUri, assignment);
   }
 
-  public delete(assignmentUri: string) : void {
+  public delete(id: string) : void {
 
-    this.httpClient.delete(assignmentUri)
+    let url = `${this.AssigmentUri}/${id}`;
+
+    this.httpClient.delete(url)
       .subscribe(response => {
         console.log(`response: ${response}`);
       }, error => {

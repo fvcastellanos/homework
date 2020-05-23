@@ -3,6 +3,7 @@ import {AssignmentService} from "./assignment.service";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Assignment} from "./model/assignment";
 import * as $ from "jquery";
+import {UrlHelperService} from "../helper/url-helper.service";
 
 @Component({
   selector: 'app-assignment',
@@ -14,7 +15,7 @@ export class AssignmentComponent implements OnInit {
   assignmentList: Assignment[];
   form: FormGroup;
   formSubmitted: boolean;
-  deleteUrl: string;
+  deleteId: string;
   deleteName: string;
 
   constructor(private formBuilder: FormBuilder,
@@ -32,12 +33,13 @@ export class AssignmentComponent implements OnInit {
       .subscribe(response => {
 
         console.log(`got response: ${response}`);
-        this.assignmentList = response._embedded.assignments
-      });
-  }
+        this.assignmentList = response._embedded.assignments;
 
-  displayAddForm(): void {
-    this.buildAddForm();
+        this.assignmentList.forEach(assignment => {
+          assignment.id = UrlHelperService.getIdFromResource(assignment._links['self'].href);
+        });
+
+      });
   }
 
   buildAddForm(): void {
@@ -92,29 +94,29 @@ export class AssignmentComponent implements OnInit {
           console.log(error);
         });
 
-      this.closeAddModal();
-      window.location.reload();
+      AssignmentComponent.closeAddModal();
+      location.reload();
     }
   }
 
   confirmDelete(name: string, url: string) {
 
-    console.log(`name: ${name}, url: ${url}`);
+    console.log(`name: ${name}, id: ${url}`);
     this.deleteName = name;
-    this.deleteUrl = url;
+    this.deleteId = url;
   }
 
   deleteAssignment(url: string) : void {
 
     this.assigmentService.delete(url);
-    window.location.reload();
+    location.reload();
   }
 
   get f() {
     return this.form.controls;
   }
 
-  private closeAddModal() {
+  private static closeAddModal() {
     $("#modalClose").click();
   }
 }

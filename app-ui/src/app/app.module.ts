@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import {HttpClientModule} from "@angular/common/http";
 import { HomeworkComponent } from './homework/homework.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import { UpdateAssignmentComponent } from './assignment/update-assignment/update-assignment.component';
 
 @NgModule({
   declarations: [
@@ -15,13 +16,14 @@ import {ReactiveFormsModule} from "@angular/forms";
     AssignmentComponent,
     HomeComponent,
     HomeworkComponent,
+    UpdateAssignmentComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        ReactiveFormsModule
-    ],
+  imports: [
+      BrowserModule,
+      AppRoutingModule,
+      HttpClientModule,
+      ReactiveFormsModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

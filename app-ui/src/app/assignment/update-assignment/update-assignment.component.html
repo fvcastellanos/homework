@@ -1,0 +1,59 @@
+<div class="container-fluid">
+
+  <div class="row main justify-content-center">
+    <div class="col-10">
+
+      <h1>Assignments</h1>
+
+      <form [formGroup]="form" (ngSubmit)="updateAssignment()">
+
+        <fieldset>
+          <div class="form-group has-danger">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Assignment name" formControlName="name"
+                   [ngClass]="{ 'is-invalid': formSubmitted && f.name.errors }">
+            <div *ngIf="formSubmitted && f.name.errors" class="invalid-feedback">
+              <div *ngIf="f.name.errors.required">Name is required</div>
+              <div *ngIf="f.name.errors.maxlength">Maximum length is 150 chars</div>
+            </div>
+          </div>
+          <div class="form-group has-danger">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" rows="3" formControlName="description"
+                      [ngClass]="{ 'is-invalid': formSubmitted && f.description.errors }">
+              </textarea>
+            <div *ngIf="formSubmitted && f.description.errors" class="invalid-feedback">
+              <div *ngIf="f.description.errors.maxlength">Maximum length is 300 chars</div>
+            </div>
+          </div>
+          <div class="form-group has-danger">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Assignment email" formControlName="email"
+                   [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }">
+            <div *ngIf="formSubmitted && f.email.errors" class="invalid-feedback">
+              <div *ngIf="f.email.errors.required">Email is required</div>
+              <div *ngIf="f.email.errors.email">Invalid Email format</div>
+              <div *ngIf="f.email.errors.maxlength">Maximum length is 250 chars</div>
+            </div>
+          </div>
+          <div class="form-group has-danger">
+            <label for="copy-email">Copy Email</label>
+            <input type="email" class="form-control" id="copy-email" placeholder="Copy Email" formControlName="copyEmail"
+                   [ngClass]="{ 'is-invalid': formSubmitted && f.copyEmail.errors }">
+            <div *ngIf="formSubmitted && f.copyEmail.errors" class="invalid-feedback">
+              <div *ngIf="f.copyEmail.errors.email">Invalid Email format</div>
+              <div *ngIf="f.copyEmail.errors.maxlength">Maximum length is 250 chars</div>
+            </div>
+          </div>
+
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+        &nbsp;
+        <a class="btn btn-light" routerLink="/assignments" href="#">Cancel</a>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>

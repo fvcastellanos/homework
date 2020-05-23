@@ -2,7 +2,7 @@ import {Href} from "../../model/href";
 
 export class Assignment {
 
-  public id: number;
+  public id: string;
   public name: string;
   public description: string;
   public email: string;
