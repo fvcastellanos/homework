@@ -83,15 +83,28 @@ export class UpdateAssignmentComponent implements OnInit {
 
   updateAssignment(): void {
 
-    this.assigmentService.update(this.assignment).subscribe(response => {
+    this.formSubmitted = true;
 
-      console.info(response);
-    }, error => {
+    if (this.form.valid) {
 
-      console.error(error);
-    });
+      let assignment = new Assignment();
+      assignment.id = this.form.controls.id.value;
+      assignment.name = this.form.controls.name.value;
+      assignment.description = this.form.controls.description.value;
+      assignment.email = this.form.controls.email.value;
+      assignment.copyEmail = this.form.controls.copyEmail.value;
 
-    this.router.navigate(['assignments']);
+      this.assigmentService.update(assignment).subscribe(response => {
+
+        console.info(response);
+      }, error => {
+
+        console.error(error);
+      });
+
+      this.router.navigate(['assignments']);
+    }
+
   }
 
   get f() {

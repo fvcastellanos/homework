@@ -17,6 +17,7 @@ export class AssignmentComponent implements OnInit {
   deleteId: number;
   deleteIndex: number;
   deleteName: string;
+  assignment: Assignment;
 
   @ViewChild("closeModal")
   public closeModalButton: ElementRef;
@@ -110,6 +111,11 @@ export class AssignmentComponent implements OnInit {
     this.assigmentService.delete(id).subscribe(response => {
       this.assignmentList.splice(index, 1);
     });
+  }
+
+  viewAssignment(index: number): void {
+
+    this.assignment = this.assignmentList[index];
   }
 
   get f() {
