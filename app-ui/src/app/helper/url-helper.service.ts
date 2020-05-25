@@ -5,9 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class UrlHelperService {
 
-  static getIdFromResource(url: string) : string {
+  static getIdFromResource(url: string) : number {
 
     let index = url.lastIndexOf("/");
-    return url.substr(index + 1);
+
+    return parseInt(url.substr(index+1));
   }
 }

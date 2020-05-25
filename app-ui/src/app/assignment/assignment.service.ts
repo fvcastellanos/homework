@@ -20,7 +20,7 @@ export class AssignmentService {
     return this.httpClient.get<Response>(this.AssigmentUri);
   }
 
-  public getById(id: string): Observable<Assignment> {
+  public getById(id: number): Observable<Assignment> {
 
     let url = `${this.AssigmentUri}/${id}`;
     return this.httpClient.get<Assignment>(url);
@@ -31,15 +31,16 @@ export class AssignmentService {
     return this.httpClient.post<Assignment>(this.AssigmentUri, assignment);
   }
 
-  public delete(id: string) : void {
+  public delete(id: number) : Observable<any> {
 
     let url = `${this.AssigmentUri}/${id}`;
 
-    this.httpClient.delete(url)
-      .subscribe(response => {
-        console.log(`response: ${response}`);
-      }, error => {
-        console.log(`error: ${error}`);
-      });
+    return this.httpClient.delete(url);
+  }
+
+  update(assignment: Assignment): Observable<Assignment> {
+
+    let url = `${this.AssigmentUri}/${assignment.id}`;
+    return this.httpClient.put<Assignment>(url, assignment);
   }
 }

@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AssignmentService} from "./assignment.service";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Assignment} from "./model/assignment";
-import * as $ from "jquery";
 import {UrlHelperService} from "../helper/url-helper.service";
 
 @Component({
@@ -15,8 +14,12 @@ export class AssignmentComponent implements OnInit {
   assignmentList: Assignment[];
   form: FormGroup;
   formSubmitted: boolean;
-  deleteId: string;
+  deleteId: number;
+  deleteIndex: number;
   deleteName: string;
+
+  @ViewChild("closeModal")
+  public closeModalButton: ElementRef;
 
   constructor(private formBuilder: FormBuilder,
               private assigmentService: AssignmentService) { }
@@ -77,46 +80,45 @@ export class AssignmentComponent implements OnInit {
 
       console.log('form is valid');
 
-      const form = this.form.value;
-      let value = new Assignment();
-
-      value.name = form.name;
-      value.description = form.description;
-      value.email = form.email;
-      value.copyEmail = form.copyEmail;
-
+      const value = this.form.value;
       this.assigmentService.add(value)
         .subscribe(response => {
 
-          console.log(response);
+          const newAssignment = response;
+          newAssignment.id = UrlHelperService.getIdFromResource(response._links['self'].href);
+
+          this.assignmentList.push(newAssignment);
         }, error => {
 
           console.log(error);
         });
 
-      AssignmentComponent.closeAddModal();
-      location.reload();
+      this.closeAddModal();
     }
   }
 
-  confirmDelete(name: string, url: string) {
+  confirmDelete(name: string, id: number, index: number) {
 
-    console.log(`name: ${name}, id: ${url}`);
+    console.log(`name: ${name}, id: ${id}`);
     this.deleteName = name;
-    this.deleteId = url;
+    this.deleteId = id;
+    this.deleteIndex = index;
   }
 
-  deleteAssignment(url: string) : void {
+  deleteAssignment(id: number, index: number) : void {
 
-    this.assigmentService.delete(url);
-    location.reload();
+    this.assigmentService.delete(id).subscribe(response => {
+      this.assignmentList.splice(index, 1);
+    });
   }
 
   get f() {
     return this.form.controls;
   }
 
-  private static closeAddModal() {
-    $("#modalClose").click();
+  // ----------------------------------------------------------------------------------------
+
+  private closeAddModal() {
+    this.closeModalButton.nativeElement.click();
   }
 }

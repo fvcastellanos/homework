@@ -20,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let assignment of assignmentList">
+          <tr *ngFor="let assignment of assignmentList, let i = index">
             <td>{{assignment.name}}</td>
             <td>{{assignment.email}}</td>
             <td>{{assignment.copyEmail}}</td>
@@ -28,7 +28,7 @@
               <a class="btn btn-info"><i class="fa fa-eye" ></i></a>&nbsp;
               <a class="btn btn-primary" href="#" [routerLink]="['/assignments', assignment.id]"><i class="fa fa-pencil" ></i></a>&nbsp;
               <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"
-                (click)="confirmDelete(assignment.name, assignment.id)">
+                (click)="confirmDelete(assignment.name, assignment.id, i)">
                 <i class="fa fa-trash" ></i>
               </button>
             </td>
@@ -100,7 +100,7 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" id="modalClose" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" #closeModal id="modalClose" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -121,7 +121,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" (click)="deleteAssignment(this.deleteId)">Delete</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteAssignment(this.deleteId, this.deleteIndex)">Delete</button>
       </div>
     </div>
   </div>

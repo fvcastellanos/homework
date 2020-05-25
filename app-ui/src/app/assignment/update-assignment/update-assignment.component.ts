@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AssignmentService} from "../assignment.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Assignment} from "../model/assignment";
 
 @Component({
@@ -13,48 +13,66 @@ export class UpdateAssignmentComponent implements OnInit {
 
   formSubmitted: boolean;
   form: FormGroup;
-  assignmentId: string;
+  assignmentId: number;
   assignment: Assignment;
 
-  constructor(private route: ActivatedRoute,
+  constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
               private formBuilder: FormBuilder,
               private assigmentService: AssignmentService) { }
 
   ngOnInit(): void {
-
     this.formSubmitted = false;
     this.buildUpdateForm();
+    this.getAssignmentIdPathParameter();
+    this.loadAssignment(this.assignmentId);
+  }
 
-    this.route.paramMap.subscribe(param => {
-      console.info(`param: ${param}`);
+  getAssignmentIdPathParameter(): void {
+
+    this.activatedRoute.params.subscribe(param => {
+
       this.assignmentId = param['id'];
+      console.info(`id: ${this.assignmentId}`);
     });
+  }
 
+  loadAssignment(id: number): void {
+
+    this.assigmentService.getById(id).subscribe(assignment => {
+
+      console.info(`name: ${assignment.name}`);
+
+      this.assignment = new Assignment();
+      this.assignment.id = id;
+      this.assignment.name = assignment.name;
+      this.assignment.description = assignment.description;
+      this.assignment.email = assignment.email;
+      this.assignment.copyEmail = assignment.copyEmail;
+
+      this.buildUpdateForm();
+
+    });
   }
 
   buildUpdateForm(): void {
 
-    let value = this.assigmentService.getById(this.assignmentId).subscribe(a => {
-      this.assignment = new Assignment();
-      this.assignment.id = this.assignmentId;
-      this.assignment.name = a.name;
-    });
-
     this.form = this.formBuilder.group({
 
-      name: new FormControl(this.assignment.name, [
+      id: new FormControl(this.assignment ? this.assignment.id: 0),
+      name: new FormControl(this.assignment ? this.assignment.name: '', [
         Validators.required,
         Validators.maxLength(150)
       ]),
-      description: new FormControl('', [
+      description: new FormControl(this.assignment ? this.assignment.description: '', [
         Validators.maxLength(300)
       ]),
-      email: new FormControl('', [
+      email: new FormControl(this.assignment ? this.assignment.email: '', [
         Validators.required,
         Validators.maxLength(250),
         Validators.email
       ]),
-      copyEmail: new FormControl('', [
+      copyEmail: new FormControl(this.assignment ? this.assignment.copyEmail: '', [
         Validators.maxLength(250),
         Validators.email
       ])
@@ -65,6 +83,15 @@ export class UpdateAssignmentComponent implements OnInit {
 
   updateAssignment(): void {
 
+    this.assigmentService.update(this.assignment).subscribe(response => {
+
+      console.info(response);
+    }, error => {
+
+      console.error(error);
+    });
+
+    this.router.navigate(['assignments']);
   }
 
   get f() {
