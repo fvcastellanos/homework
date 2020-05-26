@@ -3,6 +3,8 @@ import {AssignmentService} from "./assignment.service";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Assignment} from "./model/assignment";
 import {UrlHelperService} from "../helper/url-helper.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {ApiError} from "../model/api-error";
 
 @Component({
   selector: 'app-assignment',
@@ -18,6 +20,7 @@ export class AssignmentComponent implements OnInit {
   deleteIndex: number;
   deleteName: string;
   assignment: Assignment;
+  globalErrors: string[];
 
   @ViewChild("closeModal")
   public closeModalButton: ElementRef;
@@ -33,21 +36,24 @@ export class AssignmentComponent implements OnInit {
 
   getAssignments(): void {
 
-    this.assigmentService.getAll()
-      .subscribe(response => {
+    this.globalErrors = [];
+    this.assignmentList = [];
+    this.assigmentService.getAll().subscribe(response => {
 
         console.log(`got response: ${response}`);
+
         this.assignmentList = response._embedded.assignments;
 
         this.assignmentList.forEach(assignment => {
           assignment.id = UrlHelperService.getIdFromResource(assignment._links['self'].href);
         });
 
-      });
+      },error => this.handleError(error));
   }
 
   buildAddForm(): void {
 
+    this.globalErrors = [];
     this.formSubmitted = false;
     this.form = this.formBuilder.group({
 
@@ -87,12 +93,9 @@ export class AssignmentComponent implements OnInit {
 
           const newAssignment = response;
           newAssignment.id = UrlHelperService.getIdFromResource(response._links['self'].href);
-
           this.assignmentList.push(newAssignment);
-        }, error => {
 
-          console.log(error);
-        });
+        }, error => this.handleError(error));
 
       this.closeAddModal();
     }
@@ -100,6 +103,7 @@ export class AssignmentComponent implements OnInit {
 
   confirmDelete(name: string, id: number, index: number) {
 
+    this.globalErrors = [];
     console.log(`name: ${name}, id: ${id}`);
     this.deleteName = name;
     this.deleteId = id;
@@ -110,12 +114,20 @@ export class AssignmentComponent implements OnInit {
 
     this.assigmentService.delete(id).subscribe(response => {
       this.assignmentList.splice(index, 1);
-    });
+    }, error => this.handleError(error));
   }
 
   viewAssignment(index: number): void {
 
+    this.globalErrors = [];
     this.assignment = this.assignmentList[index];
+  }
+
+  reloadData(): void {
+
+    this.globalErrors = [];
+    this.assignmentList = [];
+    this.getAssignments();
   }
 
   get f() {
@@ -126,5 +138,20 @@ export class AssignmentComponent implements OnInit {
 
   private closeAddModal() {
     this.closeModalButton.nativeElement.click();
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+
+    if (error.status == 400) {
+      const errors : ApiError [] = error.error.errors;
+      errors.forEach(error => {
+        this.globalErrors.push(`${error.entity}.${error.property} has invalid value: ${error.invalidValue} with message: ${error.message}`);
+      });
+
+      return;
+    }
+
+    this.globalErrors.push("Can't perform operation");
+    console.error(error.statusText);
   }
 }
