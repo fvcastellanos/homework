@@ -3,23 +3,24 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AssignmentService} from "../assignment.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Assignment} from "../model/assignment";
+import {BaseComponent} from "../../base/base-component";
 
 @Component({
   selector: 'app-update-assignment',
   templateUrl: './update-assignment.component.html',
   styleUrls: ['./update-assignment.component.css']
 })
-export class UpdateAssignmentComponent implements OnInit {
+export class UpdateAssignmentComponent extends BaseComponent implements OnInit {
 
-  formSubmitted: boolean;
-  form: FormGroup;
   assignmentId: number;
   assignment: Assignment;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private formBuilder: FormBuilder,
-              private assigmentService: AssignmentService) { }
+              private assigmentService: AssignmentService) {
+    super();
+  }
 
   ngOnInit(): void {
     this.formSubmitted = false;
@@ -52,7 +53,7 @@ export class UpdateAssignmentComponent implements OnInit {
 
       this.buildUpdateForm();
 
-    });
+    }, error => this.handleError(error));
   }
 
   buildUpdateForm(): void {
@@ -97,17 +98,14 @@ export class UpdateAssignmentComponent implements OnInit {
       this.assigmentService.update(assignment).subscribe(response => {
 
         console.info(response);
+        this.router.navigate(['assignments']);
+
       }, error => {
 
         console.error(error);
+        this.handleError(error);
       });
-
-      this.router.navigate(['assignments']);
     }
 
-  }
-
-  get f() {
-    return this.form.controls;
   }
 }

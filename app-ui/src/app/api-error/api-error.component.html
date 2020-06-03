@@ -1,5 +1,5 @@
 
-<div *ngIf="globalErrors != null && globalErrors.length > 0" class="main" (change)="handleError(responseError)">
+<div *ngIf="globalErrors != null && globalErrors.length > 0" class="main">
   <div class="alert alert-danger" role="alert" *ngFor="let error of globalErrors">
     {{error}}
   </div>

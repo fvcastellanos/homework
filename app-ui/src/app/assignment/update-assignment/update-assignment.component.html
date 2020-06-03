@@ -5,6 +5,8 @@
 
       <h1>Assignments</h1>
 
+      <app-api-error [responseError]="apiError"></app-api-error>
+
       <form [formGroup]="form" (ngSubmit)="updateAssignment()">
 
         <fieldset>

@@ -7,26 +7,26 @@ import {HttpErrorResponse} from "@angular/common/http";
   templateUrl: './api-error.component.html',
   styleUrls: ['./api-error.component.css']
 })
-export class ApiErrorComponent implements OnInit, OnChanges {
+export class ApiErrorComponent implements OnChanges {
 
   globalErrors: string[];
   @Input() responseError!: HttpErrorResponse;
 
   constructor() { }
 
-  ngOnInit(): void {
-    // console.info(`error: ${this.responseError}`);
-    // this.handleError(this.responseError);
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
 
-    console.info(`changes: ${changes}`);
-
-    // this.handleError(changes.responseError);
+    let apiError = changes.responseError.currentValue;
+    console.info(`API error change detected`);
+    this.handleError(apiError);
   }
 
   private handleError(error: HttpErrorResponse): void {
+
+    if (error == null) {
+      this.globalErrors = [];
+      return;
+    }
 
     if (error.status == 400) {
       const errors : ApiError [] = error.error.errors;
