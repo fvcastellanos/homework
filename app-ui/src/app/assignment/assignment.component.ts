@@ -20,7 +20,8 @@ export class AssignmentComponent implements OnInit {
   deleteIndex: number;
   deleteName: string;
   assignment: Assignment;
-  globalErrors: string[];
+  apiError: HttpErrorResponse;
+  // globalErrors: string[];
 
   @ViewChild("closeModal")
   public closeModalButton: ElementRef;
@@ -36,7 +37,7 @@ export class AssignmentComponent implements OnInit {
 
   getAssignments(): void {
 
-    this.globalErrors = [];
+    // this.globalErrors = [];
     this.assignmentList = [];
     this.assigmentService.getAll().subscribe(response => {
 
@@ -53,7 +54,7 @@ export class AssignmentComponent implements OnInit {
 
   buildAddForm(): void {
 
-    this.globalErrors = [];
+    // this.globalErrors = [];
     this.formSubmitted = false;
     this.form = this.formBuilder.group({
 
@@ -103,7 +104,7 @@ export class AssignmentComponent implements OnInit {
 
   confirmDelete(name: string, id: number, index: number) {
 
-    this.globalErrors = [];
+    // this.globalErrors = [];
     console.log(`name: ${name}, id: ${id}`);
     this.deleteName = name;
     this.deleteId = id;
@@ -119,13 +120,13 @@ export class AssignmentComponent implements OnInit {
 
   viewAssignment(index: number): void {
 
-    this.globalErrors = [];
+    // this.globalErrors = [];
     this.assignment = this.assignmentList[index];
   }
 
   reloadData(): void {
 
-    this.globalErrors = [];
+    // this.globalErrors = [];
     this.assignmentList = [];
     this.getAssignments();
   }
@@ -142,6 +143,8 @@ export class AssignmentComponent implements OnInit {
 
   private handleError(error: HttpErrorResponse): void {
 
+    this.apiError = error;
+/*
     if (error.status == 400) {
       const errors : ApiError [] = error.error.errors;
       errors.forEach(error => {
@@ -153,5 +156,6 @@ export class AssignmentComponent implements OnInit {
 
     this.globalErrors.push("Can't perform operation");
     console.error(error.statusText);
+*/
   }
 }

@@ -14,12 +14,15 @@
         Reload data
       </button>
 
+<!--
       <div *ngIf="globalErrors != null && globalErrors.length > 0" class="main">
         <div class="alert alert-danger" role="alert" *ngFor="let error of globalErrors">
           {{error}}
         </div>
       </div>
+-->
 
+      <app-api-error [responseError]="apiError"></app-api-error>
       <table class="table table-striped table-main">
         <thead>
           <tr>

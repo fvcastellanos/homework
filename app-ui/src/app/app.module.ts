@@ -9,6 +9,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { HomeworkComponent } from './homework/homework.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { UpdateAssignmentComponent } from './assignment/update-assignment/update-assignment.component';
+import { ApiErrorComponent } from './api-error/api-error.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { UpdateAssignmentComponent } from './assignment/update-assignment/update
     HomeComponent,
     HomeworkComponent,
     UpdateAssignmentComponent,
+    ApiErrorComponent,
   ],
   imports: [
       BrowserModule,
