@@ -26,7 +26,7 @@ public class Homework {
     private long id;
 
     @NotNull
-    private long assigmentId;
+    private long assignmentId;
 
     @NotBlank
     @Size(max = 150)

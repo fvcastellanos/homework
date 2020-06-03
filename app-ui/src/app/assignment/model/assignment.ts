@@ -8,5 +8,5 @@ export class Assignment {
   public email: string;
   public copyEmail: string;
 
-  public _links: Map<string, Href>[]
+  public _links: Map<string, Href>[];
 }

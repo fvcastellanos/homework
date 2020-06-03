@@ -1,1 +1,178 @@
-<p>homework works!</p>
+<div class="container-fluid">
+
+  <div class="row main justify-content-center">
+    <div class="col-10">
+
+      <h1>Homework</h1>
+
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal" (click)="buildAddForm()">
+        Add Homework
+      </button>
+      &nbsp;
+      <button type="button" class="btn btn-info" (click)="reloadData()">
+        Reload data
+      </button>
+
+      <app-api-error [responseError]="apiError"></app-api-error>
+      <table class="table table-striped table-main">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Copy Email</th>
+          <th>#</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let homework of homeworkList, let i = index">
+          <td>{{homework.name}}</td>
+          <td>{{homework.email}}</td>
+          <td>{{homework.copyEmail}}</td>
+          <td>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewModal" (click)="viewAssignment(i)">
+              <i class="fa fa-eye"></i>
+            </button>
+            &nbsp;
+            <a class="btn btn-primary" href="#" [routerLink]="['/assignments', homework.id]"><i class="fa fa-pencil" ></i></a>
+            &nbsp;
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"
+                    (click)="confirmDelete(homework.name, homework.id, i)">
+              <i class="fa fa-trash" ></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add Assignment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="addAssignment()">
+
+          <fieldset>
+            <div class="form-group has-danger">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" placeholder="Assignment name" formControlName="name"
+                     [ngClass]="{ 'is-invalid': formSubmitted && f.name.errors }">
+              <div *ngIf="formSubmitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">Name is required</div>
+                <div *ngIf="f.name.errors.maxlength">Maximum length is 150 chars</div>
+              </div>
+            </div>
+            <div class="form-group has-danger">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" rows="3" formControlName="description"
+                        [ngClass]="{ 'is-invalid': formSubmitted && f.description.errors }">
+              </textarea>
+              <div *ngIf="formSubmitted && f.description.errors" class="invalid-feedback">
+                <div *ngIf="f.description.errors.maxlength">Maximum length is 300 chars</div>
+              </div>
+            </div>
+            <div class="form-group has-danger">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Assignment email" formControlName="email"
+                     [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }">
+              <div *ngIf="formSubmitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Invalid Email format</div>
+                <div *ngIf="f.email.errors.maxlength">Maximum length is 250 chars</div>
+              </div>
+            </div>
+            <div class="form-group has-danger">
+              <label for="copy-email">Copy Email</label>
+              <input type="email" class="form-control" id="copy-email" placeholder="Copy Email" formControlName="copyEmail"
+                     [ngClass]="{ 'is-invalid': formSubmitted && f.copyEmail.errors }">
+              <div *ngIf="formSubmitted && f.copyEmail.errors" class="invalid-feedback">
+                <div *ngIf="f.copyEmail.errors.email">Invalid Email format</div>
+                <div *ngIf="f.copyEmail.errors.maxlength">Maximum length is 250 chars</div>
+              </div>
+            </div>
+
+          </fieldset>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" #closeModal id="modalClose" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Assignment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to delete the assignment: <strong>{{deleteName}}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteAssignment(this.deleteId, this.deleteIndex)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View modal -->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true" *ngIf="assignment != null">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalLabel">View Assignment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-borderless">
+          <tr>
+            <th>Id</th>
+            <td>{{assignment.id}}</td>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <td>{{assignment.name}}</td>
+          </tr>
+          <tr>
+            <th>Description</th>
+            <td><p>{{assignment.description}}</p></td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td>{{assignment.email}}</td>
+          </tr>
+          <tr>
+            <th>Copy Email</th>
+            <td>{{assignment.copyEmail}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -15,9 +15,6 @@ export class AssignmentComponent extends BaseAddComponent implements OnInit {
   assignmentList: Assignment[];
   assignment: Assignment;
 
-  @ViewChild("closeModal")
-  public closeModalButton: ElementRef;
-
   constructor(private formBuilder: FormBuilder,
               private assigmentService: AssignmentService) {
     super();
