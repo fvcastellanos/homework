@@ -4,24 +4,31 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
+@Entity
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 public class Attachment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull
-    private long homeworkId;
+    @ManyToOne
+    private Homework homework;
 
     @NotBlank
     private String imagePath;

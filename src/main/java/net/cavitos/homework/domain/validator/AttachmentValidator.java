@@ -36,7 +36,7 @@ public class AttachmentValidator extends BaseValidator {
         if (!errors.hasErrors()) {
 
             var attachment = (Attachment) object;
-            var homeworkId = attachment.getHomeworkId();
+            var homeworkId = attachment.getHomework().getId();
 
             var homeworkHolder = homeworkRepository.findById(homeworkId);
 

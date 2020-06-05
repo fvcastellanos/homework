@@ -14,7 +14,7 @@ public class AssignmentRepositoryTest extends RepositoryTestBase {
     private AssigmentRepository assigmentRepository;
 
     @Test
-    public void testGetAssigments() {
+    public void testGetAssignments() {
 
         var assigment = buildAssigment("test assignment");
         var storedAssigment = saveAssigment(assigment);

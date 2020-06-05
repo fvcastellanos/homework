@@ -4,22 +4,28 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@Entity
 @Getter
 @Builder
 @ToString
+@NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor
 public class Assignment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @NotBlank

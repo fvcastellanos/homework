@@ -37,9 +37,9 @@ public class ValidatorConfiguration implements RepositoryRestConfigurer {
     @Configuration
     public static class ValidatorConfigurer implements RepositoryRestConfigurer {
 
-        private AssigmentValidator assigmentValidator;
-        private HomeworkValidator homeworkValidator;
-        private AttachmentValidator attachmentValidator;
+        private final AssigmentValidator assigmentValidator;
+        private final HomeworkValidator homeworkValidator;
+        private final AttachmentValidator attachmentValidator;
 
         public ValidatorConfigurer(AssigmentValidator assigmentValidator,
                                    HomeworkValidator homeworkValidator,

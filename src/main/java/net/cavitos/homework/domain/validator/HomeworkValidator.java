@@ -57,7 +57,7 @@ public class HomeworkValidator extends BaseValidator {
         if (!errors.hasErrors()) {
 
             var homework = (Homework) object;
-            var assigmentId = homework.getAssignmentId();
+            var assigmentId = homework.getAssignment().getId();
 
             var assigmentHolder = assigmentRepository.findById(assigmentId);
 
