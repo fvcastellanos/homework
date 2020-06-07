@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -21,15 +23,17 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "attachment")
 public class Attachment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
     private Homework homework;
 
     @NotBlank
-    private String imagePath;
+    @Column(name = "image_path")
+    private String filePath;
 }

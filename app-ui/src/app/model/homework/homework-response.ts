@@ -1,5 +1,5 @@
 import {HomeworkEmbedded} from "./homework-embedded";
-import {Href} from "../../model/href";
+import {Href} from "../href";
 
 export class HomeworkResponse {
 

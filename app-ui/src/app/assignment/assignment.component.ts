@@ -1,8 +1,7 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {AssignmentService} from "./assignment.service";
+import {Component, OnInit} from '@angular/core';
+import {AssignmentService} from "../services/assignment.service";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {Assignment} from "./model/assignment";
-import {UrlHelperService} from "../helper/url-helper.service";
+import {Assignment} from "../model/assignment/assignment";
 import {BaseAddComponent} from "../base/base-add-component";
 
 @Component({
@@ -35,10 +34,6 @@ export class AssignmentComponent extends BaseAddComponent implements OnInit {
       console.log(`got response: ${response}`);
 
       this.assignmentList = response._embedded.assignments;
-
-      this.assignmentList.forEach(assignment => {
-        assignment.id = UrlHelperService.getIdFromResource(assignment._links['self'].href);
-      });
 
     },error => this.handleError(error));
   }
@@ -84,7 +79,7 @@ export class AssignmentComponent extends BaseAddComponent implements OnInit {
         .subscribe(response => {
 
           const newAssignment = response;
-          newAssignment.id = UrlHelperService.getIdFromResource(response._links['self'].href);
+          newAssignment.pk = response.pk;
           this.assignmentList.push(newAssignment);
 
         }, error => this.handleError(error));

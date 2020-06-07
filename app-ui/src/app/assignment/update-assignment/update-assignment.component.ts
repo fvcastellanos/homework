@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {AssignmentService} from "../assignment.service";
+import {AssignmentService} from "../../services/assignment.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Assignment} from "../model/assignment";
+import {Assignment} from "../../model/assignment/assignment";
 import {BaseComponent} from "../../base/base-component";
 
 @Component({
@@ -45,7 +45,7 @@ export class UpdateAssignmentComponent extends BaseComponent implements OnInit {
       console.info(`name: ${assignment.name}`);
 
       this.assignment = new Assignment();
-      this.assignment.id = id;
+      this.assignment.pk = id;
       this.assignment.name = assignment.name;
       this.assignment.description = assignment.description;
       this.assignment.email = assignment.email;
@@ -60,7 +60,7 @@ export class UpdateAssignmentComponent extends BaseComponent implements OnInit {
 
     this.form = this.formBuilder.group({
 
-      id: new FormControl(this.assignment ? this.assignment.id: 0),
+      id: new FormControl(this.assignment ? this.assignment.pk: 0),
       name: new FormControl(this.assignment ? this.assignment.name: '', [
         Validators.required,
         Validators.maxLength(150)
@@ -89,7 +89,7 @@ export class UpdateAssignmentComponent extends BaseComponent implements OnInit {
     if (this.form.valid) {
 
       let assignment = new Assignment();
-      assignment.id = this.form.controls.id.value;
+      assignment.pk = this.form.controls.id.value;
       assignment.name = this.form.controls.name.value;
       assignment.description = this.form.controls.description.value;
       assignment.email = this.form.controls.email.value;

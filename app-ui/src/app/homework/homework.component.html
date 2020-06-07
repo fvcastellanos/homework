@@ -18,25 +18,25 @@
         <thead>
         <tr>
           <th>Name</th>
-          <th>Email</th>
-          <th>Copy Email</th>
+          <th>Assignment</th>
+          <th>Due</th>
           <th>#</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let homework of homeworkList, let i = index">
           <td>{{homework.name}}</td>
-          <td>{{homework.email}}</td>
-          <td>{{homework.copyEmail}}</td>
+          <td>{{homework.assignment.name}}</td>
+          <td>{{homework.due}}</td>
           <td>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewModal" (click)="viewAssignment(i)">
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewModal" (click)="view(i)">
               <i class="fa fa-eye"></i>
             </button>
             &nbsp;
-            <a class="btn btn-primary" href="#" [routerLink]="['/assignments', homework.id]"><i class="fa fa-pencil" ></i></a>
+            <a class="btn btn-primary" href="#" [routerLink]="['/homework', homework.pk]"><i class="fa fa-pencil" ></i></a>
             &nbsp;
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"
-                    (click)="confirmDelete(homework.name, homework.id, i)">
+                    (click)="confirmDelete(homework.name, homework.pk, i)">
               <i class="fa fa-trash" ></i>
             </button>
           </td>
@@ -54,15 +54,25 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addModalLabel">Add Assignment</h5>
+        <h5 class="modal-title" id="addModalLabel">Add Homework</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="form" (ngSubmit)="addAssignment()">
+        <form [formGroup]="form" (ngSubmit)="add()">
 
           <fieldset>
+            <div class="form-group has-danger">
+              <label for="name">Assignment</label>
+              <select id="assignment" class="form-control" formControlName="assignment"
+                      [ngClass]="{ 'is-invalid': formSubmitted && f.assignment.errors }">
+                <option *ngFor="let assignment of assignmentList"  value="{{assignment.pk}}-{{assignment.name}}">{{assignment.name}}</option>
+              </select>
+              <div *ngIf="formSubmitted && f.assignment.errors" class="invalid-feedback">
+                <div *ngIf="f.assignment.errors.required">Assignment is required</div>
+              </div>
+            </div>
             <div class="form-group has-danger">
               <label for="name">Name</label>
               <input type="text" class="form-control" id="name" placeholder="Assignment name" formControlName="name"
@@ -82,22 +92,11 @@
               </div>
             </div>
             <div class="form-group has-danger">
-              <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Assignment email" formControlName="email"
-                     [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }">
-              <div *ngIf="formSubmitted && f.email.errors" class="invalid-feedback">
-                <div *ngIf="f.email.errors.required">Email is required</div>
-                <div *ngIf="f.email.errors.email">Invalid Email format</div>
-                <div *ngIf="f.email.errors.maxlength">Maximum length is 250 chars</div>
-              </div>
-            </div>
-            <div class="form-group has-danger">
-              <label for="copy-email">Copy Email</label>
-              <input type="email" class="form-control" id="copy-email" placeholder="Copy Email" formControlName="copyEmail"
-                     [ngClass]="{ 'is-invalid': formSubmitted && f.copyEmail.errors }">
-              <div *ngIf="formSubmitted && f.copyEmail.errors" class="invalid-feedback">
-                <div *ngIf="f.copyEmail.errors.email">Invalid Email format</div>
-                <div *ngIf="f.copyEmail.errors.maxlength">Maximum length is 250 chars</div>
+              <label for="due">Due</label>
+              <input type="date" class="form-control" id="due" formControlName="due"
+                     [ngClass]="{ 'is-invalid': formSubmitted && f.due.errors }">
+              <div *ngIf="formSubmitted && f.due.errors" class="invalid-feedback">
+                <div *ngIf="f.due.errors.required">Due Date is required</div>
               </div>
             </div>
 
@@ -125,18 +124,18 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>Do you want to delete the assignment: <strong>{{deleteName}}</strong>?</p>
+        <p>Do you want to delete the homework: <strong>{{deleteName}}</strong>?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteAssignment(this.deleteId, this.deleteIndex)">Delete</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(this.deleteId, this.deleteIndex)">Delete</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- View modal -->
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true" *ngIf="assignment != null">
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true" *ngIf="homework != null">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -148,24 +147,24 @@
       <div class="modal-body">
         <table class="table table-striped table-borderless">
           <tr>
+            <th>Email</th>
+            <td>{{homework.assignment.name}}</td>
+          </tr>
+          <tr>
             <th>Id</th>
-            <td>{{assignment.id}}</td>
+            <td>{{homework.pk}}</td>
           </tr>
           <tr>
             <th>Name</th>
-            <td>{{assignment.name}}</td>
+            <td>{{homework.name}}</td>
           </tr>
           <tr>
             <th>Description</th>
-            <td><p>{{assignment.description}}</p></td>
+            <td><p>{{homework.description}}</p></td>
           </tr>
           <tr>
-            <th>Email</th>
-            <td>{{assignment.email}}</td>
-          </tr>
-          <tr>
-            <th>Copy Email</th>
-            <td>{{assignment.copyEmail}}</td>
+            <th>Due</th>
+            <td>{{homework.due}}</td>
           </tr>
         </table>
       </div>

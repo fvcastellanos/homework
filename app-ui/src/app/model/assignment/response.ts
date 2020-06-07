@@ -1,5 +1,5 @@
 import {Embedded} from "./embedded";
-import {Href} from "../../model/href";
+import {Href} from "../href";
 
 export class Response {
 

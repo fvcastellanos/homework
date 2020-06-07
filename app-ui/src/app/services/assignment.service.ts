@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {Response} from "./model/response";
-import {Assignment} from "./model/assignment";
+import {Response} from "../model/assignment/response";
+import {Assignment} from "../model/assignment/assignment";
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +40,7 @@ export class AssignmentService {
 
   update(assignment: Assignment): Observable<Assignment> {
 
-    let url = `${this.AssigmentUri}/${assignment.id}`;
+    let url = `${this.AssigmentUri}/${assignment.pk}`;
     return this.httpClient.put<Assignment>(url, assignment);
   }
 }

@@ -22,10 +22,9 @@ public class ValidatorConfiguration implements RepositoryRestConfigurer {
     }
 
     @Bean
-    public HomeworkValidator homeworkValidator(AssigmentRepository assigmentRepository,
-                                               HomeworkRepository homeworkRepository) {
+    public HomeworkValidator homeworkValidator(HomeworkRepository homeworkRepository) {
 
-        return new HomeworkValidator(homeworkRepository, assigmentRepository);
+        return new HomeworkValidator(homeworkRepository);
     }
 
     @Bean

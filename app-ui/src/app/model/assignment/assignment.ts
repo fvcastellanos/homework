@@ -1,8 +1,8 @@
-import {Href} from "../../model/href";
+import {Href} from "../href";
 
 export class Assignment {
 
-  public id: number;
+  public pk: number;
   public name: string;
   public description: string;
   public email: string;

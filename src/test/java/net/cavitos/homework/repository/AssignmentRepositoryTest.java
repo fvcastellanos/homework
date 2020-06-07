@@ -4,8 +4,6 @@ import net.cavitos.homework.domain.model.Assignment;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AssignmentRepositoryTest extends RepositoryTestBase {
@@ -19,9 +17,9 @@ public class AssignmentRepositoryTest extends RepositoryTestBase {
         var assigment = buildAssigment("test assignment");
         var storedAssigment = saveAssigment(assigment);
 
-        var assigments = assigmentRepository.findAll();
+        var assignments = assigmentRepository.findAll();
 
-        assertThat(assigments)
+        assertThat(assignments)
                 .containsOnlyOnce(storedAssigment);
     }
 
@@ -63,11 +61,6 @@ public class AssignmentRepositoryTest extends RepositoryTestBase {
                     .copyEmail(rs.getString("copy_email"))
                     .build()
         ));
-    }
-
-    private List<Assignment> getAssigments() {
-
-        return jdbcOperations.queryForList("select * from assignment", Assignment.class);
     }
 
     private Assignment saveAssigment(Assignment assignment) {
