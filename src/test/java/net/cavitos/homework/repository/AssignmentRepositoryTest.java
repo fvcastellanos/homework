@@ -32,7 +32,7 @@ public class AssignmentRepositoryTest extends RepositoryTestBase {
         var storedAssigment = getAssigment(assigmentName);
 
         assertThat(assigment)
-                .isEqualTo(storedAssigment);
+                .isEqualToIgnoringGivenFields(storedAssigment, "pk");
     }
 
     @Test
@@ -55,6 +55,7 @@ public class AssignmentRepositoryTest extends RepositoryTestBase {
         return jdbcOperations.queryForObject("select * from assignment where name = ?", new Object[] { name }, ((rs, i) ->
             Assignment.builder()
                     .id(rs.getLong("id"))
+                    .pk(rs.getLong("id"))
                     .name(rs.getString("name"))
                     .description(rs.getString("description"))
                     .email(rs.getString("email"))
